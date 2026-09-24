@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wanderlust — แนะนำสถานที่ท่องเที่ยวทั่วโลก</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Noto+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f2; --card:#ffffff; --text:#14181f; --muted:#6b7480;
+  --line:rgba(20,24,31,.09); --accent:#0f8a7e; --accent2:#f0a04b;
+  --shadow:0 18px 40px -22px rgba(16,24,40,.45);
+}
+html[data-theme="dark"]{
+  --bg:#0d1117; --card:#161b24; --text:#eef2f7; --muted:#97a1b0;
+  --line:rgba(255,255,255,.09); --accent:#3ddbc7; --accent2:#ffb86b;
+  --shadow:0 18px 44px -20px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans Thai',system-ui,sans-serif;transition:.35s background,.35s color;overflow-x:hidden}
+.wrap{max-width:1200px;margin:auto;padding:0 22px}
+h1,h2,h3,.serif{font-family:'Playfair Display','Noto Sans Thai',serif}
+
+/* ---------- NAV ---------- */
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 26px;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid var(--line)}
+.logo{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:800;letter-spacing:.5px}
+.logo span{color:var(--accent)}
+.nav-actions{display:flex;gap:10px;align-items:center}
+.icon-btn{border:1px solid var(--line);background:var(--card);color:var(--text);width:40px;height:40px;border-radius:50%;
+  cursor:pointer;font-size:1.05rem;display:grid;place-items:center;transition:.25s}
+.icon-btn:hover{transform:translateY(-2px);border-color:var(--accent);color:var(--accent)}
+
+/* ---------- HERO ---------- */
+header.hero{position:relative;min-height:80vh;display:grid;place-items:center;text-align:center;overflow:hidden;color:#fff}
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1900&q=70') center/cover;
+  transform:scale(1.08);animation:zoom 18s ease-in-out infinite alternate}
+@keyframes zoom{to{transform:scale(1.2)}}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,14,20,.55),rgba(8,14,20,.8))}
+.hero-inner{position:relative;z-index:2;padding:40px 20px;max-width:780px}
+.eyebrow{letter-spacing:.35em;font-size:.72rem;text-transform:uppercase;opacity:.85;margin-bottom:16px}
+.hero h1{font-size:clamp(2.3rem,6vw,4.3rem);line-height:1.12;margin-bottom:18px;text-shadow:0 6px 28px rgba(0,0,0,.4)}
+.hero h1 em{color:var(--accent2);font-style:italic}
+.hero p{opacity:.92;font-weight:300;font-size:1.02rem;margin-bottom:30px}
+.search{display:flex;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);
+  padding:8px;border-radius:60px;backdrop-filter:blur(8px);max-width:520px;margin:auto}
+.search input{flex:1;border:0;outline:0;background:transparent;color:#fff;font-size:1rem;padding:10px 18px;font-family:inherit}
+.search input::placeholder{color:rgba(255,255,255,.7)}
+.search button{border:0;cursor:pointer;background:var(--accent);color:#fff;padding:11px 26px;border-radius:50px;font-family:inherit;font-weight:600;transition:.25s}
+.search button:hover{background:var(--accent2);transform:scale(1.04)}
+.scroll-hint{position:absolute;bottom:22px;z-index:2;font-size:.75rem;letter-spacing:.2em;opacity:.8;animation:bob 2s infinite}
+@keyframes bob{50%{transform:translateY(8px)}}
+
+/* ---------- SECTION ---------- */
+section{padding:72px 0}
+.sec-head{text-align:center;margin-bottom:34px}
+.sec-head h2{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:10px}
+.sec-head p{color:var(--muted);font-weight:300}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:38px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--muted);padding:9px 20px;border-radius:50px;
+  cursor:pointer;font-family:inherit;font-size:.9rem;transition:.25s}
+.chip:hover{color:var(--accent);border-color:var(--accent)}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 8px 20px -10px var(--accent)}
+
+/* ---------- GRID ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:26px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;cursor:pointer;
+  box-shadow:var(--shadow);transition:.4s cubic-bezier(.2,.8,.2,1);opacity:0;transform:translateY(26px)}
+.card.show{opacity:1;transform:none}
+.card:hover{transform:translateY(-10px)}
+.thumb{position:relative;height:210px;overflow:hidden;background:linear-gradient(135deg,#9fb8c9,#4f6d7a)}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:.7s}
+.card:hover .thumb img{transform:scale(1.12)}
+.tag{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.55);color:#fff;font-size:.7rem;
+  padding:5px 12px;border-radius:30px;backdrop-filter:blur(6px);letter-spacing:.06em}
+.fav{position:absolute;top:10px;right:10px;width:36px;height:36px;border:0;border-radius:50%;cursor:pointer;
+  background:rgba(255,255,255,.85);font-size:1rem;display:grid;place-items:center;transition:.25s}
+.fav:hover{transform:scale(1.15)}
+.fav.on{background:#ff5e7a;color:#fff}
+.card-body{padding:18px 20px 22px}
+.card-body h3{font-size:1.28rem;margin-bottom:4px}
+.country{color:var(--accent);font-size:.82rem;font-weight:600;margin-bottom:10px;letter-spacing:.04em}
+.desc{color:var(--muted);font-size:.9rem;font-weight:300;line-height:1.65;min-height:48px}
+.meta{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+.stars{color:var(--accent2);font-weight:600}
+.empty{text-align:center;color:var(--muted);padding:60px 0;grid-column:1/-1}
+
+/* ---------- MODAL ---------- */
+.overlay{position:fixed;inset:0;background:rgba(6,10,16,.72);backdrop-filter:blur(6px);z-index:100;
+  display:grid;place-items:center;padding:20px;opacity:0;pointer-events:none;transition:.3s}
+.overlay.open{opacity:1;pointer-events:auto}
+.modal{background:var(--card);border-radius:24px;max-width:640px;width:100%;max-height:88vh;overflow:auto;
+  transform:translateY(30px) scale(.97);transition:.35s cubic-bezier(.2,.9,.2,1)}
+.overlay.open .modal{transform:none}
+.modal-img{height:260px;background:#889;position:relative}
+.modal-img img{width:100%;height:100%;object-fit:cover}
+.close{position:absolute;top:14px;right:14px;width:38px;height:38px;border:0;border-radius:50%;
+  background:rgba(255,255,255,.9);cursor:pointer;font-size:1.1rem}
+.modal-body{padding:26px 28px 32px}
+.modal-body h2{font-size:2rem;margin-bottom:6px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:20px 0}
+.fact{background:color-mix(in srgb,var(--accent) 9%,transparent);border-radius:14px;padding:12px 14px}
+.fact b{display:block;font-size:.7rem;color:var(--muted);font-weight:600;letter-spacing:.08em;margin-bottom:3px}
+.hl{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.hl li{background:color-mix(in srgb,var(--accent2) 16%,transparent);padding:6px 14px;border-radius:30px;font-size:.82rem}
+
+footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;color:var(--muted);font-size:.85rem}
+@media(max-width:600px){.thumb{height:185px}section{padding:52px 0}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Wander<span>lust</span></div>
+  <div class="nav-actions">
+    <button class="icon-btn" id="favBtn" title="รายการโปรด">♡</button>
+    <button class="icon-btn" id="themeBtn" title="สลับธีม">☾</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <p class="eyebrow">Explore the world</p>
+    <h1>ออกเดินทาง<br>สู่ที่ที่<em>หัวใจ</em>เรียกหา</h1>
+    <p>รวม 12 จุดหมายปลายทางที่สวยที่สุดในโลก พร้อมช่วงเวลาที่ควรไป งบประมาณ และไฮไลท์ที่ห้ามพลาด</p>
+    <div class="search">
+      <input id="q" type="text" placeholder="ค้นหาเมือง ประเทศ หรือบรรยากาศที่ชอบ…">
+      <button onclick="document.getElementById('list').scrollIntoView({behavior:'smooth'})">ค้นหา</button>
+    </div>
+  </div>
+  <div class="scroll-hint">SCROLL ↓</div>
+</header>
+
+<section id="list">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>จุดหมายยอดนิยม</h2>
+      <p>คัดมาแล้วจากทุกทวีป — เลือกสไตล์ที่ใช่สำหรับทริปหน้าของคุณ</p>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<footer class="wrap">© 2025 Wanderlust — เว็บแนะนำสถานที่ท่องเที่ยวทั่วโลก · ภาพประกอบจาก Unsplash</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-img"><img id="mImg" alt=""><button class="close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <p class="country" id="mCountry"></p>
+      <h2 id="mName"></h2>
+      <p class="desc" id="mDesc" style="min-height:auto"></p>
+      <div class="facts">
+        <div class="fact"><b>ช่วงที่ดีที่สุด</b><span id="mSeason"></span></div>
+        <div class="fact"><b>งบต่อวัน</b><span id="mBudget"></span></div>
+        <div class="fact"><b>คะแนนนิยม</b><span id="mRate"></span></div>
+        <div class="fact"><b>ควรอยู่</b><span id="mDays"></span></div>
+      </div>
+      <b style="font-size:.78rem;letter-spacing:.08em;color:var(--muted)">ไฮไลท์ที่ห้ามพลาด</b>
+      <ul class="hl" id="mHl"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA=[
+ {n:"ซานโตรินี",c:"กรีซ",r:"ยุโรป",img:"1570077188670-e3a8d69ac5ff",d:"บ้านสีขาวโดมสีฟ้าเรียงไล่ระดับบนหน้าผาภูเขาไฟ กับพระอาทิตย์ตกที่สวยที่สุดแห่งหนึ่งของโลก",s:"พ.ค.–ต.ค.",b:"3,500–6,000 ฿",rt:4.9,day:"3–4 วัน",h:["หมู่บ้าน Oia","ล่องเรือปล่องภูเขาไฟ","หาดทรายแดง"]},
+ {n:"เกียวโต",c:"ญี่ปุ่น",r:"เอเชีย",img:"1493976040374-85c8e12f0c0e",d:"เมืองหลวงเก่าที่เก็บรักษาวัดพันปี สวนเซน และตรอกไม้แบบดั้งเดิมไว้อย่างสมบูรณ์",s:"มี.ค.–เม.ย. / พ.ย.",b:"2,500–4,500 ฿",rt:4.9,day:"4–5 วัน",h:["ฟูชิมิอินาริ","ป่าไผ่อาราชิยาม่า","วัดคินคะคุจิ"]},
+ {n:"ปารีส",c:"ฝรั่งเศส",r:"ยุโรป",img:"1502602898657-3e91760cbb34",d:"เมืองแห่งแสงไฟ ศิลปะ แฟชั่น และคาเฟ่ริมถนนที่โรแมนติกที่สุดในโลก",s:"เม.ย.–มิ.ย. / ก.ย.–ต.ค.",b:"4,000–7,000 ฿",rt:4.8,day:"4–6 วัน",h:["หอไอเฟล","พิพิธภัณฑ์ลูฟวร์","ย่านมงต์มาทร์"]},
+ {n:"มัลดีฟส์",c:"มัลดีฟส์",r:"เอเชีย",img:"1514282401047-d79a71a590e8",d:"น้ำทะเลใสระดับเทอร์ควอยซ์ กับวิลล่ากลางน้ำที่เหมาะกับฮันนีมูนที่สุด",s:"พ.ย.–เม.ย.",b:"8,000–25,000 ฿",rt:4.9,day:"4–5 วัน",h:["ดำน้ำกับกระเบนราหู","หาดเรืองแสง","สปากลางทะเล"]},
+ {n:"มาชูปิกชู",c:"เปรู",r:"อเมริกา",img:"1526392060635-9d6019884377",d:"นครสาบสูญของชาวอินคาบนสันเขาแอนดีสที่ความสูง 2,430 เมตรเหนือทะเลหมอก",s:"พ.ค.–ก.ย.",b:"2,800–5,000 ฿",rt:4.9,day:"2–3 วัน",h:["Inca Trail","Sun Gate","หุบเขาศักดิ์สิทธิ์"]},
+ {n:"บาหลี",c:"อินโดนีเซีย",r:"เอเชีย",img:"1537996194471-e657df975ab4",d:"เกาะแห่งเทพเจ้า นาขั้นบันไดสีเขียว วัดริมผา และคาเฟ่วิวหลักล้าน",s:"เม.ย.–ต.ค.",b:"1,200–3,000 ฿",rt:4.7,day:"5–7 วัน",h:["อูบุด","วัดทานาห์ลอต","นาขั้นบันไดเตกาลาลัง"]},
+ {n:"ไอซ์แลนด์",c:"ไอซ์แลนด์",r:"ยุโรป",img:"1504829857797-ddff29c27927",d:"ดินแดนไฟและน้ำแข็ง น้ำตกยักษ์ ธารน้ำแข็ง และแสงเหนือเต็มท้องฟ้า",s:"ก.ย.–มี.ค. (แสงเหนือ)",b:"5,000–9,000 ฿",rt:4.8,day:"6–8 วัน",h:["Blue Lagoon","Golden Circle","ทะเลสาบธารน้ำแข็ง"]},
+ {n:"นิวยอร์ก",c:"สหรัฐอเมริกา",r:"อเมริกา",img:"1496442226666-8d4d0e62e6e9",d:"มหานครที่ไม่เคยหลับใหล ตึกระฟ้า บรอดเวย์ และวัฒนธรรมจากทั่วทุกมุมโลก",s:"เม.ย.–มิ.ย. / ก.ย.–พ.ย.",b:"5,500–9,000 ฿",rt:4.7,day:"5–7 วัน",h:["Central Park","Times Square","เทพีเสรีภาพ"]},
+ {n:"คัปปาโดเกีย",c:"ตุรกี",r:"ยุโรป",img:"1570939274717-7eda259b50ed",d:"หุบเขาหินรูปทรงประหลาด กับบอลลูนหลายร้อยลูกลอยขึ้นพร้อมกันยามเช้า",s:"เม.ย.–มิ.ย. / ก.ย.–พ.ย.",b:"2,000–4,000 ฿",rt:4.9,day:"2–3 วัน",h:["ขึ้นบอลลูน","เมืองใต้ดิน","โรงแรมถ้ำ"]},
+ {n:"เพตรา",c:"จอร์แดน",r:"ตะวันออกกลาง",img:"1544735716-392fe2489ffa",d:"นครหินสีชมพูที่แกะสลักจากหน้าผาเมื่อกว่า 2,000 ปีก่อน หนึ่งในเจ็ดสิ่งมหัศจรรย์ใหม่",s:"มี.ค.–พ.ค. / ก.ย.–พ.ย.",b:"2,500–4,500 ฿",rt:4.8,day:"2 วัน",h:["The Treasury","Petra by Night","อารามอัดเดร์"]},
+ {n:"เซเรนเกติ",c:"แทนซาเนีย",r:"แอฟริกา",img:"1516426122078-c23e76319801",d:"ทุ่งสะวันนาไร้ขอบเขตกับการอพยพครั้งใหญ่ของวิลเดอบีสต์นับล้านตัว",s:"มิ.ย.–ต.ค.",b:"6,000–12,000 ฿",rt:4.8,day:"4–6 วัน",h:["Game Drive","Great Migration","แคมป์กลางป่า"]},
+ {n:"ควีนส์ทาวน์",c:"นิวซีแลนด์",r:"โอเชียเนีย",img:"1507699622108-4be3abd695ad",d:"เมืองริมทะเลสาบล้อมด้วยเทือกเขา เมืองหลวงแห่งกีฬาผาดโผนของโลก",s:"ธ.ค.–ก.พ. / มิ.ย.–ส.ค.",b:"3,500–6,500 ฿",rt:4.8,day:"4–5 วัน",h:["บันจี้จัมป์","Milford Sound","สกีรีสอร์ท"]}
+];
+
+const IMG=id=>`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=900&q=70`;
+const grid=document.getElementById('grid'), chips=document.getElementById('chips');
+let filter='ทั้งหมด', onlyFav=false;
+let favs=JSON.parse(localStorage.getItem('favs')||'[]');
+
+['ทั้งหมด',...new Set(DATA.map(d=>d.r))].forEach((r,i)=>{
+  const b=document.createElement('button');
+  b.className='chip'+(i===0?' active':''); b.textContent=r;
+  b.onclick=()=>{filter=r;onlyFav=false;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));b.classList.add('active');render();};
+  chips.appendChild(b);
+});
+
+function render(){
+  const q=document.getElementById('q').value.trim().toLowerCase();
+  const list=DATA.filter(d=>(filter==='ทั้งหมด'||d.r===filter)
+    &&(!onlyFav||favs.includes(d.n))
+    &&(d.n+d.c+d.d+d.r).toLowerCase().includes(q));
+  grid.innerHTML = list.length? '' : '<p class="empty">ไม่พบสถานที่ที่ตรงกับการค้นหา ลองเปลี่ยนคำค้นดูนะ 🌏</p>';
+  list.forEach((d,i)=>{
+    const el=document.createElement('article'); el.className='card';
+    el.innerHTML=`<div class="thumb">
+        <img src="${IMG(d.img)}" alt="${d.n}" loading="lazy"
+             onerror="this.onerror=null;this.src='https://picsum.photos/seed/${encodeURIComponent(d.n)}/800/600'">
+        <span class="tag">${d.r}</span>
+        <button class="fav ${favs.includes(d.n)?'on':''}" data-n="${d.n}">${favs.includes(d.n)?'♥':'♡'}</button>
+      </div>
+      <div class="card-body">
+        <p class="country">${d.c}</p><h3>${d.n}</h3>
+        <p class="desc">${d.d}</p>
+        <div class="meta"><span>🗓 ${d.s}</span><span class="stars">★ ${d.rt}</span></div>
+      </div>`;
+    el.querySelector('.fav').onclick=e=>{e.stopPropagation();toggleFav(d.n);};
+    el.onclick=()=>openModal(d);
+    grid.appendChild(el);
+    setTimeout(()=>el.classList.add('show'),60*i);
+  });
+}
+function toggleFav(n){favs.includes(n)?favs=favs.filter(x=>x!==n):favs.push(n);
+  localStorage.setItem('favs',JSON.stringify(favs));render();}
+
+function openModal(d){
+  mImg.src=IMG(d.img); mImg.onerror=()=>mImg.src=`https://picsum.photos/seed/${encodeURIComponent(d.n)}/900/500`;
+  mName.textContent=d.n; mCountry.textContent=d.c+' · '+d.r; mDesc.textContent=d.d;
+  mSeason.textContent=d.s; mBudget.textContent=d.b; mRate.textContent='★ '+d.rt; mDays.textContent=d.day;
+  mHl.innerHTML=d.h.map(x=>`<li>${x}</li>`).join('');
+  overlay.classList.add('open'); document.body.style.overflow='hidden';
+}
+function closeModal(){overlay.classList.remove('open');document.body.style.overflow='';}
+overlay.onclick=e=>{if(e.target===overlay)closeModal()};
+document.onkeydown=e=>{if(e.key==='Escape')closeModal()};
+document.getElementById('q').oninput=render;
+document.getElementById('favBtn').onclick=function(){onlyFav=!onlyFav;this.textContent=onlyFav?'♥':'♡';
+  this.style.color=onlyFav?'#ff5e7a':'';render();document.getElementById('list').scrollIntoView({behavior:'smooth'});};
+document.getElementById('themeBtn').onclick=function(){
+  const dark=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme',dark?'light':'dark');
+  this.textContent=dark?'☾':'☀';};
+render();
+</script>
+</body>
+</html>
